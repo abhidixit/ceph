@@ -547,6 +547,14 @@ bool MDSMonitor::prepare_beacon(MMDSBeacon *m)
         m->put();
         return false;
       }
+    } else if (state == MDSMap::STATE_DAMAGED) {
+      // Record this MDS rank as damaged, so that other daemons
+      // won't try to run it.
+      pending_mdsmap.up.erase(info.rank);
+      const utime_t until = ceph_clock_now(g_ceph_context);
+      pending_mdsmap.last_failure_osd_epoch = mon->osdmon()->blacklist(
+          info.addr, until);
+      pending_mdsmap.damaged.insert(info.rank);
     } else {
       info.state = state;
       info.state_seq = seq;
