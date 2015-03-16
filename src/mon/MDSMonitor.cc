@@ -555,6 +555,8 @@ bool MDSMonitor::prepare_beacon(MMDSBeacon *m)
       pending_mdsmap.last_failure_osd_epoch = mon->osdmon()->blacklist(
           info.addr, until);
       pending_mdsmap.damaged.insert(info.rank);
+      pending_mdsmap.mds_info.erase(gid);  // last! info is a ref into this map
+      last_beacon.erase(gid);
     } else {
       info.state = state;
       info.state_seq = seq;
