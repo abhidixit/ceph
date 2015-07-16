@@ -855,6 +855,7 @@ OPTION(keyvaluestore_default_strip_size, OPT_INT, 4096) // Only affect new objec
 OPTION(keyvaluestore_max_expected_write_size, OPT_U64, 1ULL << 24) // bytes
 OPTION(keyvaluestore_header_cache_size, OPT_INT, 4096)    // Header cache size
 OPTION(keyvaluestore_backend, OPT_STR, "leveldb")
+OPTION(keyvaluestore_dump_file, OPT_STR, "")         // file onto which store transaction dumps
 
 // max bytes to search ahead in journal searching for corruption
 OPTION(journal_max_corrupt_search, OPT_U64, 10<<20)
@@ -897,6 +898,7 @@ OPTION(rbd_blacklist_on_break_lock, OPT_BOOL, true) // whether to blacklist clie
 OPTION(rbd_blacklist_expire_seconds, OPT_INT, 0) // number of seconds to blacklist - set to 0 for OSD default
 OPTION(rbd_request_timed_out_seconds, OPT_INT, 30) // number of seconds before maint request times out
 OPTION(rbd_skip_partial_discard, OPT_BOOL, false) // when trying to discard a range inside an object, set to true to skip zeroing the range.
+OPTION(rbd_enable_alloc_hint, OPT_BOOL, true) // when writing a object, it will issue a hint to osd backend to indicate the expected size object need
 
 /*
  * The following options change the behavior for librbd's image creation methods that

@@ -56,11 +56,6 @@ Requires: systemd
 %endif
 BuildRequires:	gcc-c++
 BuildRequires:	boost-devel
-%if 0%{defined suse_version}
-BuildRequires:  libbz2-devel
-%else
-BuildRequires:  bzip2-devel
-%endif
 BuildRequires:	cryptsetup
 BuildRequires:	gdbm
 BuildRequires:	hdparm
@@ -84,6 +79,10 @@ BuildRequires:	python-requests
 %if ( 0%{?rhel} > 0 && 0%{?rhel} < 7 ) || ( 0%{?centos} > 0 && 0%{?centos} < 7 )
 BuildRequires:	python-sphinx10
 %endif
+%if 0%{?fedora} || 0%{defined suse_version} || 0%{?rhel} >= 7 || 0%{?centos} >= 7
+BuildRequires:	python-sphinx
+%endif
+
 BuildRequires:	python-virtualenv
 BuildRequires:	util-linux
 BuildRequires:	xfsprogs
@@ -102,13 +101,8 @@ BuildRequires:	sharutils
 %endif
 
 %if 0%{defined suse_version}
-BuildRequires:	python-sphinx
 BuildRequires:	net-tools
-BuildRequires:	xmlstarlet
-BuildRequires:	yasm
 BuildRequires:	libbz2-devel
-BuildRequires:	python-sphinx
-BuildRequires:	net-tools
 BuildRequires:	sharutils
 BuildRequires:	git
 %if 0%{?suse_version} > 1210
@@ -127,7 +121,7 @@ BuildRequires:	keyutils-devel
 BuildRequires:	libatomic-ops-devel
 BuildRequires:	fdupes
 %else
-Requires:	gdisk
+BuildRequires:  bzip2-devel
 BuildRequires:	nss-devel
 BuildRequires:	keyutils-libs-devel
 BuildRequires:	libatomic_ops-devel
@@ -496,6 +490,8 @@ export RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed -e 's/i386/i486/'`
 		--localstatedir=/var \
 		--sysconfdir=/etc \
 		--docdir=%{_docdir}/ceph \
+		--with-man-pages \
+		--mandir="%_mandir" \
 		--with-nss \
 		--without-cryptopp \
 		--with-rest-bench \
@@ -755,6 +751,8 @@ fi
 %{_datadir}/ceph/id_dsa_drop.ceph.com.pub
 %dir %{_sysconfdir}/ceph/
 %dir %{_localstatedir}/log/ceph/
+%dir %{_datarootdir}/ceph/
+%dir %{_libexecdir}/ceph/
 %config %{_sysconfdir}/bash_completion.d/rados
 %config %{_sysconfdir}/bash_completion.d/rbd
 %config(noreplace) %{_sysconfdir}/ceph/rbdmap
@@ -953,6 +951,8 @@ ln -sf %{_libdir}/librbd.so.1 /usr/lib64/qemu/librbd.so.1
 %{_bindir}/ceph_omapbench
 %{_bindir}/ceph_perf_objectstore
 %{_bindir}/ceph_perf_local
+%{_bindir}/ceph_perf_msgr_client
+%{_bindir}/ceph_perf_msgr_server
 %{_bindir}/ceph_psim
 %{_bindir}/ceph_radosacl
 %{_bindir}/ceph_rgw_jsonparser
